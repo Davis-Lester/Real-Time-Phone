@@ -12,14 +12,13 @@ The system distributes processing between a **Python Host Server** (running on a
 
 | **Lock Screen (Face ID)** | **Home Menu** | **Live Camera** |
 |:---:|:---:|:---:|
-| ![Lock Screen](![Image](https://github.com/user-attachments/assets/e13f32cd-f1af-400d-aba5-145b85019224)) | ![Home Menu](![Image](https://github.com/user-attachments/assets/7eca1aae-322e-457b-b131-85efda329ec3)) | ![Camera App](![Image](https://github.com/user-attachments/assets/2240b7e1-ee59-4bb9-9a76-ccd5bcfb0a44)) |
+| ![Lock Screen](https://github.com/user-attachments/assets/e13f32cd-f1af-400d-aba5-145b85019224) | ![Home Menu](https://github.com/user-attachments/assets/7eca1aae-322e-457b-b131-85efda329ec3) | ![Camera App](https://github.com/user-attachments/assets/2240b7e1-ee59-4bb9-9a76-ccd5bcfb0a44) |
 | *Secure entry with real-time clock* | *Joystick-navigable app grid* | *Video streaming from laptop* |
 
 | **Live Weather** | **Digital Compass** | **Frogger Game** |
 |:---:|:---:|:---:|
-| ![Weather App](![Image](https://github.com/user-attachments/assets/4d2543c2-55f3-4d09-9304-02865dd076d4)) | ![Compass App](![Image](https://github.com/user-attachments/assets/9c7723cd-30bb-4015-8521-47d4dda47566)) | ![Frogger](![Image](https://github.com/user-attachments/assets/e79b7798-e694-4dad-a863-efa1c1e517c9)) |
+| ![Weather App](https://github.com/user-attachments/assets/4d2543c2-55f3-4d09-9304-02865dd076d4) | ![Compass App](https://github.com/user-attachments/assets/9c7723cd-30bb-4015-8521-47d4dda47566) | ![Frogger](https://github.com/user-attachments/assets/e79b7798-e694-4dad-a863-efa1c1e517c9) |
 | *Live API data via UART* | *Real-time magnetometer data* | *Physics, collisions & sprites* |
-
 ---
 
 ## 🛠️ System Architecture
@@ -49,7 +48,7 @@ The system distributes processing between a **Python Host Server** (running on a
 
 The system relies on a high-speed **460,800 baud** UART connection. The MCU acts as the client, sending single-character commands, and the Python server responds with data packets.
 
-| Command | Direction&nbsp;&nbsp;&nbsp; | Description | Response Data Format |
+| Command | Direction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description | Response Data Format |
 | :--- | :--- | :--- | :--- |
 | `'U'` | Python → MCU | **Unlock Signal.** Sent automatically when OpenCV detects a face. | None (State change) |
 | `'T'` | MCU → Python | **Time Request.** Fetches current system time. | String: `"12:45 PM"` (null-terminated) |
