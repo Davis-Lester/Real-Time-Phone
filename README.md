@@ -77,8 +77,7 @@ flowchart TD
   
   %% Host Internal
   CV --> Py
-  Web --> Py
-  ```
+  Web --> Py```
 
   ## 🧵 Multithreading Model
 
@@ -115,4 +114,4 @@ sequenceDiagram
             MCU->>MCU: State: UNLOCKED
             MCU->>MCU: Launch Home_Thread
         end
-    end
+    end```
