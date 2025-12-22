@@ -69,7 +69,7 @@ flowchart TD
   end
 
   %% Connections
-  Py <== "UART (460,800 Baud)" ==> Kernel
+  Py <==>|UART 460,800 Baud| Kernel
   Kernel --> UI
   Kernel --> Sensor
   UI --> LCD
@@ -77,7 +77,9 @@ flowchart TD
   
   %% Host Internal
   CV --> Py
-  Web --> Py```
+  Web --> Py
+```
+
 
   ## 🧵 Multithreading Model
 
