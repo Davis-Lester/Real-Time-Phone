@@ -1,0 +1,13 @@
+# 1. Ignore everything in the repository
+*
+
+# 2. Do not ignore these specific files
+!threads.c
+!threads.h
+!main.c
+!README.md
+!Camera.py
+
+
+# 3. Do not ignore the .gitignore file itself
+!.gitignore
