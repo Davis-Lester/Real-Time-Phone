@@ -12,12 +12,12 @@ The system distributes processing between a **Python Host Server** (running on a
 
 | **Lock Screen (Face ID)** | **Home Menu** | **Live Camera** |
 |:---:|:---:|:---:|
-| ![Lock Screen](https://github.com/user-attachments/assets/e13f32cd-f1af-400d-aba5-145b85019224) | ![Home Menu](https://github.com/user-attachments/assets/7eca1aae-322e-457b-b131-85efda329ec3) | ![Camera App](https://github.com/user-attachments/assets/2240b7e1-ee59-4bb9-9a76-ccd5bcfb0a44) |
+| ![Lock Screen](https://github.com/user-attachments/assets/b19f4cfa-3143-421b-aa1f-5c65a9ce7488) | ![Home Menu](https://github.com/user-attachments/assets/a6d10275-64e5-4cea-961d-5ec5cc844735) | ![Camera App](https://github.com/user-attachments/assets/37f2f23f-47d3-40dc-b836-20fed003983f |
 | *Secure entry with real-time clock* | *Joystick-navigable app grid* | *Video streaming from laptop* |
 
 | **Live Weather** | **Digital Compass** | **Frogger Game** |
 |:---:|:---:|:---:|
-| ![Weather App](https://github.com/user-attachments/assets/4d2543c2-55f3-4d09-9304-02865dd076d4) | ![Compass App](https://github.com/user-attachments/assets/9c7723cd-30bb-4015-8521-47d4dda47566) | ![Frogger](https://github.com/user-attachments/assets/e79b7798-e694-4dad-a863-efa1c1e517c9) |
+| ![Weather App](https://github.com/user-attachments/assets/f5718656-d064-46e8-a315-c34a4b48d3d2) | ![Compass App](https://github.com/user-attachments/assets/649550f1-091c-4177-81d2-6eb37c155d32) | ![Frogger](https://github.com/user-attachments/assets/610db2d7-fd89-414e-bcfd-bdacbdac092a) |
 | *Live API data via UART* | *Real-time magnetometer data* | *Physics, collisions & sprites* |
 ---
 
