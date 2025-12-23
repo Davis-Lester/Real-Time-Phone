@@ -126,9 +126,10 @@ To stream video over UART, the Python host compresses standard 24-bit Web color 
 
 **The Bitwise Conversion Law:**
 
-$$
-\text{Pixel}_{16} = ((R \ \& \ 0xF8) \ll 8) \ | \ ((G \ \& \ 0xFC) \ll 3) \ | \ (B \gg 3)
-$$
+```c
+// Convert RGB888 to RGB565
+uint16_t Pixel_16 = ((R & 0xF8) << 8) | ((G & 0xFC) << 3) | (B >> 3);
+```
 
 Where:
 * **Red:** 5 bits (Mask `0xF8`)
