@@ -22,9 +22,9 @@ The system runs on **RTOS**, a custom-written RTOS kernel supporting semaphores,
 | **Biometric Security** | **Face Unlock** using Haar Cascades (OpenCV) running on the host, communicating state via UART. |
 | **Cloud Apps** | **Weather & Location** apps fetch live JSON data from `wttr.in` and IP-APIs, parsed on-chip. |
 | **Streaming Media** | **Live Camera** feed streams raw RGB565 frames from laptop to MCU over 460k baud UART. |
-| **Gaming** | **Frogger** clone with object pooling, AABB collision detection, and localized delta-drawing. |
+| **Gaming** | **Frogger** clone with localized delta-drawing, object collision detection, and an easy to update layout. |
 | **Sensor Fusion** | **Compass** app reads BMI160 magnetometer vectors via I2C for real-time heading calculation. |
-| **Kernel** | **Preemptive Scheduler** with non-blocking IPC (Inter-Process Communication) and starvation prevention. |
+| **Kernel** | **Preemptive Scheduler** with non-blocking IPC (Inter-Process Communication), Mutexes, Semaphores, and more. |
 
 ---
 
@@ -38,13 +38,13 @@ The system runs on **RTOS**, a custom-written RTOS kernel supporting semaphores,
 | **Live Weather** | **Digital Compass** | **Frogger Game** |
 |:---:|:---:|:---:|
 | ![Weather App](https://github.com/user-attachments/assets/37f2f23f-47d3-40dc-b836-20fed003983f) | ![Compass App](https://github.com/user-attachments/assets/649550f1-091c-4177-81d2-6eb37c155d32) | ![Frogger](https://github.com/user-attachments/assets/f5718656-d064-46e8-a315-c34a4b48d3d2) |
-| *Live API data via UART* | *Real-time magnetometer data* | *Physics, collisions & sprites* |
+| *Live API data via UART* | *Real-time heading data, `[` Location removed for security \\] * | *Physics, collisions & sprites* |
 
 ---
 
 ## High-Level Architecture
 
-The system utilizes a **Client-Server model** over a physical UART bridge. The MCU handles the Real-Time requirements (UI, Sensors), while the PC handles heavy computation.
+The system utilizes a **Client-Server model** over a physical UART bridge. The MCU handles the Real-Time requirements (UI, Sensors), while the PC accesses the internet and the camera, features not included on the board.
 
 ```mermaid
 flowchart TD
@@ -52,6 +52,7 @@ flowchart TD
     Py[Python Server]
     CV[OpenCV Engine]
     Web[Web APIs]
+    Camera[Camera]
   end
 
   subgraph Target [Target Tiva C MCU]
@@ -59,7 +60,7 @@ flowchart TD
     
     subgraph S_Threads [Threads]
       UI[UI App Thread]
-      Sensor[Sensor Polling]
+      Sensor[Sensor Data]
     end
     
     subgraph S_Hardware [Hardware]
@@ -71,6 +72,7 @@ flowchart TD
   %% Host Internal Connections
   CV --> Py
   Web --> Py
+  Camera --> Py
 
   %% Cross-System Connection
   Py <-->|UART 460k Baud| Kernel
@@ -84,15 +86,17 @@ flowchart TD
 
   ## 🧵 Multithreading Model
 
-The RTOS kernel manages resources using **Semaphores** (for the I2C bus and SPI Display) and **FIFOs** (to pass joystick data to game threads).
+The RTOS kernel manages resources using **Semaphores** and **Mutexes** (for the I2C bus, SPI Display, and more) and **FIFOs** (to pass joystick and button data to game threads).
 
-| Task/Thread | Priority | Resource Usage | Function |
+| Thread | Priority | Resource Usage | Function |
 | :--- | :---: | :--- | :--- |
-| **UART_Handler** | Highest (ISR) | Hardware FIFO | Captures incoming bytes immediately to prevent buffer overrun. |
-| **RTOS_Scheduler**| Kernel | SysTick | Context switches between active threads. |
-| **App_Thread** | High | SPI / Display | Runs the active application (Frogger, Camera, etc.). |
-| **Sensor_Thread** | Medium | I2C Bus | Polls BMI160 and Joystick; posts data to OS FIFOs. |
-| **Idle_Thread** | Lowest | None | Low-power sleep when no tasks are active. |
+| **Home_Thread** | Highest | SPI / Display | Displays the Home / Lock screen, and calls the threads for applications (Frogger, Camera, etc.). |
+| **Read_Buttons** | Medium | Hardware buttons | Awaits the semaphore release from aperiodic button thread and reads what button is pressed |
+| **Idle_Thread** | Lowest | None | Low-power sleep when no threads are active. |
+| **Camera_App** | N/A | Transmitts 'P' over UART to signal a photo transfer, and display the photo to the screen |
+| **Weather_App** | N/A | Transmitts 'W' over UART to signal a weather transfer, and displays the info to the screen |
+| **Frogger_App** | N/A | "Game in a thread", updates game state, displays game and changes, and allows user to play a game
+| **Compass_App** | N/A | Transmitts 'C' over UART to signal a location transfer, uses the Magnetometer to display a compass pointing north |
 
 ---
 
