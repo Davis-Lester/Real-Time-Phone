@@ -38,7 +38,7 @@ The system runs on **RTOS**, a custom-written RTOS kernel supporting semaphores,
 | **Live Weather** | **Digital Compass** | **Frogger Game** |
 |:---:|:---:|:---:|
 | ![Weather App](https://github.com/user-attachments/assets/37f2f23f-47d3-40dc-b836-20fed003983f) | ![Compass App](https://github.com/user-attachments/assets/649550f1-091c-4177-81d2-6eb37c155d32) | ![Frogger](https://github.com/user-attachments/assets/f5718656-d064-46e8-a315-c34a4b48d3d2) |
-| *Live API data via UART* | *Real-time heading data, `[` Location removed for security \\] * | *Physics, collisions & sprites* |
+| *Live API data via UART* | *Real-time heading data, Location removed for security* | *Physics, collisions & sprites* |
 
 ---
 
@@ -93,10 +93,10 @@ The RTOS kernel manages resources using **Semaphores** and **Mutexes** (for the 
 | **Home_Thread** | Highest | SPI / Display | Displays the Home / Lock screen, and calls the threads for applications (Frogger, Camera, etc.). |
 | **Read_Buttons** | Medium | Hardware buttons | Awaits the semaphore release from aperiodic button thread and reads what button is pressed |
 | **Idle_Thread** | Lowest | None | Low-power sleep when no threads are active. |
-| **Camera_App** | N/A | Transmitts 'P' over UART to signal a photo transfer, and display the photo to the screen |
-| **Weather_App** | N/A | Transmitts 'W' over UART to signal a weather transfer, and displays the info to the screen |
-| **Frogger_App** | N/A | "Game in a thread", updates game state, displays game and changes, and allows user to play a game
-| **Compass_App** | N/A | Transmitts 'C' over UART to signal a location transfer, uses the Magnetometer to display a compass pointing north |
+| **Camera_App** | N/A | Camera and Screen | Transmitts 'P' over UART to signal a photo transfer, and display the photo to the screen |
+| **Weather_App** | N/A | Screen | Transmitts 'W' over UART to signal a weather transfer, and displays the info to the screen |
+| **Frogger_App** | N/A | Joystick and Screen | "Game in a thread", updates game state, displays game and changes, and allows user to play a game
+| **Compass_App** | N/A | BMI160 and Screen | Transmitts 'C' over UART to signal a location transfer, uses the Magnetometer to display a compass pointing north |
 
 ---
 
