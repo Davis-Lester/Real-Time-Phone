@@ -7,3 +7,7 @@
 !main.c
 !README.md
 !Camera.py
+
+
+# 3. Do not ignore the .gitignore file itself
+!.gitignore
