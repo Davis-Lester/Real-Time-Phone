@@ -48,38 +48,39 @@ The system utilizes a **Client-Server model** over a physical UART bridge. The M
 
 ```mermaid
 flowchart TD
-  subgraph "Host (Laptop)"
+  subgraph Host [Host Laptop]
     Py[Python Server]
     CV[OpenCV Engine]
     Web[Web APIs]
   end
 
-  subgraph "Target (Tiva C MCU)"
+  subgraph Target [Target Tiva C MCU]
     Kernel[RTOS Kernel]
     
-    subgraph "Threads"
-      UI[UI / App Thread]
+    subgraph S_Threads [Threads]
+      UI[UI App Thread]
       Sensor[Sensor Polling]
     end
     
-    subgraph "Hardware"
+    subgraph S_Hardware [Hardware]
       LCD[ST7789 Display]
       IMU[BMI160 Sensor]
     end
   end
 
-  %% Connections
-  Py <==>|UART 460,800 Baud| Kernel
+  %% Host Internal Connections
+  CV --> Py
+  Web --> Py
+
+  %% Cross-System Connection
+  Py <-->|UART 460k Baud| Kernel
+
+  %% MCU Internal Connections
   Kernel --> UI
   Kernel --> Sensor
   UI --> LCD
   Sensor --> IMU
-  
-  %% Host Internal
-  CV --> Py
-  Web --> Py
 ```
-
 
   ## 🧵 Multithreading Model
 
@@ -102,9 +103,9 @@ This diagram illustrates the handshake between the MCU and the Python Host to pe
 
 ```mermaid
 sequenceDiagram
-    participant MCU as Tiva C (RTOS)
-    participant Host as Python Server
-    participant Cam as Webcam
+    participant MCU as "Tiva C (RTOS)"
+    participant Host as "Python Server"
+    participant Cam as "Webcam"
 
     Note over MCU: State: LOCKED
     loop Every 100ms
@@ -116,4 +117,44 @@ sequenceDiagram
             MCU->>MCU: State: UNLOCKED
             MCU->>MCU: Launch Home_Thread
         end
-    end```
+    end
+```
+
+### Image Compression (Math)
+
+To stream video over UART, the Python host compresses standard 24-bit Web color into **16-bit RGB565** before transmission. This reduces bandwidth by 33%, allowing for higher framerates.
+
+**The Bitwise Conversion Law:**
+
+$$
+\text{Pixel}_{16} = ((R \ \& \ 0xF8) \ll 8) \ | \ ((G \ \& \ 0xFC) \ll 3) \ | \ (B \gg 3)
+$$
+
+Where:
+* **Red:** 5 bits (Mask `0xF8`)
+* **Green:** 6 bits (Mask `0xFC`)
+* **Blue:** 5 bits (Shifted right)
+
+---
+
+## 📡 Communication Protocol (UART)
+
+The system relies on a high-speed **460,800 baud** UART connection. The MCU acts as the client, sending single-character commands, and the Python server responds with data packets.
+
+| Command | Direction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description | Response Data Format |
+| :--- | :--- | :--- | :--- |
+| `'U'` | Python → MCU | **Unlock Signal.** Sent automatically when OpenCV detects a face. | None (State change) |
+| `'T'` | MCU → Python | **Time Request.** Fetches current system time. | String: `"12:45 PM"` (null-terminated) |
+| `'W'` | MCU → Python | **Weather Request.** Fetches live weather from `wttr.in`. | String: `"City\nTemp\nCondition\nHum/Wind"` |
+| `'C'` | MCU → Python | **Location Request.** Fetches GPS coordinates via IP API. | String: `"Lat: 12.34, Lon: -56.78"` |
+| `'P'` | MCU → Python | **Photo Request.** Fetches a single frame from the webcam. | Raw Bytes: RGB565 pixel data (High/Low byte) |
+
+---
+
+## 📂 Project Structure
+
+* `Threads.c`: Main application logic, UI drawing, and app definitions.
+* `Camera.py`: Host-side processing for AI, Internet, and Time.
+* `RTOS/`: Core OS kernel files (Scheduler, Semaphores, IPC).
+* `MultimodDrivers/`: Hardware drivers for ST7789 (Display), BMI160 (IMU), and Buttons.
+* `Bitmaps/`: Header files containing pixel arrays for app icons (`Camera.h`, `Weather.h`, etc.).
